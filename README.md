@@ -155,3 +155,42 @@ git commit -m "Add README with project description"
 
 git push
 
+8月４日追記分
+
+📌 Cookie Extractor & Importer for Chrome
+このツールは、Google Chrome で使用されている Cookie を取得・保存し、後で再適用することができる Python ベースのユーティリティです。主に オンラインプライバシーの実験 を目的としています。
+
+🛠 使用方法
+1. Cookie 抽出
+bash
+Copy code
+python extractor/cookie_extractor.py
+抽出された Cookie は output/cookies_<domain>.json という形式で保存されます。
+
+2. Cookie インポート
+bash
+Copy code
+python importer/cookie_importer.py
+保存された Cookie ファイルを自動で読み込み、Chrome に適用して該当サイトを開き直します。
+
+🧪 実験目的と背景
+Webサイトごとに異なる Cookie を切り替えて適用することで、ユーザープロファイルの違いをシミュレート
+
+Cookie によるログイン状態や広告表示の変化を確認
+
+プライバシー・トラッキング技術の挙動を検証
+
+📂 ディレクトリ構成
+lua
+Copy code
+cookie-tool/
+│
+├── extractor/
+│   └── cookie_extractor.py
+├── importer/
+│   └── cookie_importer.py
+├── output/
+│   └── cookies_google.com.json
+├── .gitignore
+├── requirements.txt
+└── README.md
