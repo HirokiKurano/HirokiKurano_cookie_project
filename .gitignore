@@ -2,3 +2,7 @@ __pycache__/
 *.pyc 
 .env 
 output/ 
+
+# Ignore all in output folder except cookies file
+output/*
+!output/cookies_www.bbc.co.uk.json
