@@ -22,15 +22,6 @@ Project Schedule (Summer 2025)
 | 5 Sep      | Draft submission of final report |
 | 12 Sep     | Final submission |
 
----
-
-Current Features
-
-- [x] Extract cookies from Chrome (test environment only) and save in JSON format
-- [x] Import saved cookies into another test browser profile
-- [ ] Inspect, filter, and block selected cookies
-- [ ] Module for mixed-cookie experiments between profiles
-- [ ] Visualization and reporting of experimental results
 
 ---
 
