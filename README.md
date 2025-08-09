@@ -1,14 +1,14 @@
-# 🍪 HirokiKurano Cookie Privacy Project
+HirokiKurano Cookie Privacy Project
 
 This project develops a **Python-based toolset for extracting, importing, and managing cookies** from web browsers,  
 with the aim of **testing cookie behavior and evaluating its impact on online privacy** in a controlled environment.
 
-⚠️ **No real personal cookies or private data are used in this project.**  
+No real personal cookies or private data are used in this project.**  
 All experiments are conducted exclusively on **test accounts and isolated local browser profiles** created by the researcher.
 
 ---
 
-## 🗓 Project Schedule (Summer 2025)
+Project Schedule (Summer 2025)
 
 | Date       | Task |
 |------------|------|
@@ -24,7 +24,7 @@ All experiments are conducted exclusively on **test accounts and isolated local 
 
 ---
 
-## 🔧 Current Features
+Current Features
 
 - [x] Extract cookies from Chrome (test environment only) and save in JSON format
 - [x] Import saved cookies into another test browser profile
@@ -34,13 +34,15 @@ All experiments are conducted exclusively on **test accounts and isolated local 
 
 ---
 
-## 📦 Setup
+Setup
 
 ```bash
 git clone https://github.com/HirokiKurano/HirokiKurano_cookie_project.git
 cd HirokiKurano_cookie_project
 pip install -r requirements.txt
-🚀 Usage
+
+
+Usage
 1. Extract Cookies
 bash
 Copy
@@ -57,14 +59,14 @@ Edit
 python importer/cookie_importer.py
 Reads a saved cookie file and applies it to a test browser profile.
 
-🧪 Experiment Background & Purpose
+Experiment Background & Purpose
 Switch cookies between different test browser profiles to observe behavioral changes.
 
 Identify login state changes or advertisement personalization caused by cookies.
 
 Understand tracking mechanisms in a safe, controlled environment without privacy risks.
 
-📂 Directory Structure
+Directory Structure
 bash
 Copy
 Edit
@@ -77,12 +79,13 @@ cookie-tool/
 ├── requirements.txt        # Dependencies
 ├── .gitignore
 └── README.md
-📌 Notes
+
+Notes
 Requires Google Chrome installed locally.
 
 All tests are performed on local test accounts and browser profiles.
 
 No personal or third-party cookies are handled.
 
-📚 License
+License
 MIT License © Hiroki Kurano
