@@ -1,196 +1,88 @@
-# Cookie Extractor Tool
+# 🍪 HirokiKurano Cookie Privacy Project
 
-A simple Selenium-based tool to extract cookies from websites.
-Outputs cookies as JSON to the output/ folder.
+This project develops a **Python-based toolset for extracting, importing, and managing cookies** from web browsers,  
+with the aim of **testing cookie behavior and evaluating its impact on online privacy** in a controlled environment.
 
-
-
-\# 🍪 HirokiKurano Cookie Privacy Project
-
-
-
-このプロジェクトは、\*\*WebブラウザやアプリからCookieを抽出・インポート・分析\*\*するためのツールセットを開発し、\*\*オンラインプライバシーの影響を検証\*\*することを目的としています。
-
-
+⚠️ **No real personal cookies or private data are used in this project.**  
+All experiments are conducted exclusively on **test accounts and isolated local browser profiles** created by the researcher.
 
 ---
 
+## 🗓 Project Schedule (Summer 2025)
 
-
-\## 🗓 プロジェクトスケジュール（2025年 夏）
-
-
-
-| 日付       | タスク内容                                                                 |
-
-|------------|------------------------------------------------------------------------------|
-
-| 24 Jun     | テーマの調査・技術的な下調べ（topic familiarity）                           |
-
-| 2 Jul      | Cookie抽出ツールの開発（from browsers or apps）                             |
-
-| 11 Jul     | Cookieインポートツールの開発                                                |
-
-| 18 Jul     | ユーザープロファイルを作成し、Cookieの抽出・切り替えをテスト               |
-
-| 25 Jul     | 特定のCookie（ログイン関連など）の精査・ブロック                             |
-
-| 8 Aug      | 異なるユーザー・ブラウザ間でCookieを混合して実験                             |
-
-| 15 Aug     | プライバシーへの影響を考察・可視化                                           |
-
-| 5 Sep      | 最終レポートのドラフト提出                                                  |
-
-| 12 Sep     | 提出期限（最終版）                                                           |
-
-
+| Date       | Task |
+|------------|------|
+| 24 Jun     | Topic research & technical background study |
+| 2 Jul      | Develop cookie extraction tool (via Chrome DevTools Protocol) |
+| 11 Jul     | Develop cookie import tool |
+| 18 Jul     | Test extraction & switching between test browser profiles |
+| 25 Jul     | Inspect and block specific cookies (e.g., login-related) |
+| 8 Aug      | Cross-profile cookie mixing experiments |
+| 15 Aug     | Privacy impact analysis & visualization |
+| 5 Sep      | Draft submission of final report |
+| 12 Sep     | Final submission |
 
 ---
 
+## 🔧 Current Features
 
-
-\## 🔧 現在の機能
-
-
-
-\- \[x] Chromeから任意サイトのCookieを取得してJSON形式で保存
-
-\- \[ ] Cookieを別ユーザーや別ブラウザへインポート
-
-\- \[ ] Cookieを精査し、フィルタリング・ブロック
-
-\- \[ ] 実験モジュールによるCookieの混合テスト
-
-\- \[ ] プライバシーへの影響分析の可視化とレポート生成
-
-
+- [x] Extract cookies from Chrome (test environment only) and save in JSON format
+- [x] Import saved cookies into another test browser profile
+- [ ] Inspect, filter, and block selected cookies
+- [ ] Module for mixed-cookie experiments between profiles
+- [ ] Visualization and reporting of experimental results
 
 ---
 
-
-
-\## 📦 セットアップ
-
-
+## 📦 Setup
 
 ```bash
-
-git clone https://github.com/HirokiKurano/HirokiKurano\_cookie\_project.git
-
-cd HirokiKurano\_cookie\_project
-
+git clone https://github.com/HirokiKurano/HirokiKurano_cookie_project.git
+cd HirokiKurano_cookie_project
 pip install -r requirements.txt
-
-🚀 実行方法
-
+🚀 Usage
+1. Extract Cookies
 bash
-
-Copy code
-
-python extractor/cookie\_extractor.py
-
-取得されたCookieは output/ フォルダに保存されます。
-
-
-
-📁 フォルダ構成
-
-bash
-
-Copy code
-
-cookie-tool/
-
-├── extractor/              # Cookie抽出スクリプト
-
-│   └── cookie\_extractor.py
-
-├── output/                 # 出力されたCookieファイル（.gitignore済）
-
-├── requirements.txt        # 依存ライブラリ
-
-├── .gitignore
-
-└── README.md               # このドキュメント
-
-📌 注意点
-
-Chromeがローカルにインストールされている必要があります。
-
-
-
-出力ファイルは .gitignore によりGitHubにはアップロードされません。
-
-
-
-📚 ライセンス
-
-MIT License © Hiroki Kurano
-
-
-
-yaml
-
-Copy code
-
-
-
----
-
-
-
-\## ✅【STEP 2】保存と GitHub へのアップロード
-
-
-
-メモ帳で保存したあと、以下のコマンドでコミット＆プッシュ：
-
-
-
-```bash
-
-git add README.md
-
-git commit -m "Add README with project description"
-
-git push
-
-8月４日追記分
-
-📌 Cookie Extractor & Importer for Chrome
-このツールは、Google Chrome で使用されている Cookie を取得・保存し、後で再適用することができる Python ベースのユーティリティです。主に オンラインプライバシーの実験 を目的としています。
-
-🛠 使用方法
-1. Cookie 抽出
-bash
-Copy code
+Copy
+Edit
 python extractor/cookie_extractor.py
-抽出された Cookie は output/cookies_<domain>.json という形式で保存されます。
+Extracted cookies are saved in the format:
+output/cookies_<domain>.json
+※ All cookies are from test accounts only.
 
-2. Cookie インポート
+2. Import Cookies
 bash
-Copy code
+Copy
+Edit
 python importer/cookie_importer.py
-保存された Cookie ファイルを自動で読み込み、Chrome に適用して該当サイトを開き直します。
+Reads a saved cookie file and applies it to a test browser profile.
 
-🧪 実験目的と背景
-Webサイトごとに異なる Cookie を切り替えて適用することで、ユーザープロファイルの違いをシミュレート
+🧪 Experiment Background & Purpose
+Switch cookies between different test browser profiles to observe behavioral changes.
 
-Cookie によるログイン状態や広告表示の変化を確認
+Identify login state changes or advertisement personalization caused by cookies.
 
-プライバシー・トラッキング技術の挙動を検証
+Understand tracking mechanisms in a safe, controlled environment without privacy risks.
 
-📂 ディレクトリ構成
-lua
-Copy code
+📂 Directory Structure
+bash
+Copy
+Edit
 cookie-tool/
-│
-├── extractor/
+├── extractor/              # Cookie extraction scripts
 │   └── cookie_extractor.py
-├── importer/
+├── importer/               # Cookie import scripts
 │   └── cookie_importer.py
-├── output/
-│   └── cookies_google.com.json
+├── output/                 # Extracted cookie files (.gitignored)
+├── requirements.txt        # Dependencies
 ├── .gitignore
-├── requirements.txt
 └── README.md
+📌 Notes
+Requires Google Chrome installed locally.
+
+All tests are performed on local test accounts and browser profiles.
+
+No personal or third-party cookies are handled.
+
+📚 License
+MIT License © Hiroki Kurano
