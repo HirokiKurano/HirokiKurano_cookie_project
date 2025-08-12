@@ -40,7 +40,7 @@ Extracted cookies are saved in the format:
 output/cookies_<domain>.json
 ※ All cookies are from test accounts only.
 
-2. Import Cookies
+2. Import Cookies-
 
 python importer/cookie_importer.py
 Reads a saved cookie file and applies it to a test browser profile.
@@ -52,7 +52,18 @@ Identify login state changes or advertisement personalization caused by cookies.
 
 Understand tracking mechanisms in a safe, controlled environment without privacy risks.
 
+Cookie Filtering (Optional)
+importer/cookie_importer.py can block or allow specific cookies (via regular expressions) using filters.json or CLI options.
+
+filters <path>: Load filters.json
+allow: Allowlist (only cookies matching domain/path/name are applied)
+block: Blocklist (cookies matching these patterns are excluded)
+block-domain: Block cookies based on domain
+dry-run: Show filtering results without applying changes
+quiet: Suppress detailed logs
+
 Directory Structure
+
 
 cookie-tool/
 ├── extractor/              # Cookie extraction scripts
