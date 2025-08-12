@@ -1,35 +1,62 @@
 # extractor/cookie_extractor.py
 
-import json, os, sys, time
+import json, os, sys, time, argparse
+from urllib.parse import urlsplit
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-if len(sys.argv) < 3:
-    print("使用法: python extractor/cookie_extractor.py <URL> <プロファイル名>")
-    sys.exit(1)
+def parse_args():
+    p = argparse.ArgumentParser(
+        description="Cookie Extractor (test profiles only)",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    p.add_argument("url", help="Target URL (e.g., https://www.bbc.com/)")
+    p.add_argument("profile_name", help="Chrome profile name (profiles/<name>)")
+    p.add_argument("--wait", type=int, default=5, help="Seconds to wait after page load")
+    p.add_argument("--detach", action="store_true", help="Keep the browser window open after execution")
+    return p.parse_args()
 
-url = sys.argv[1]
-profile_name = sys.argv[2]
-profile_path = os.path.abspath(f"profiles/{profile_name}")
-domain = url.split("//")[-1].split("/")[0]
-cookie_file = f"output/cookies_{domain}.json"
+def host_from_url(u: str) -> str:
+    host = urlsplit(u).netloc
+    # Example: "example.com:443" -> "example.com"
+    return host.split(":")[0]
 
-options = Options()
-options.add_argument(f"--user-data-dir={profile_path}")
-options.add_experimental_option("detach", True)
+def main():
+    args = parse_args()
 
-print("[INFO] Chrome 起動中...")
-driver = webdriver.Chrome(options=options)
-driver.get(url)
-print(f"[INFO] {url} にアクセス中...")
-time.sleep(5)
+    url = args.url
+    profile_name = args.profile_name
+    profile_path = os.path.abspath(f"profiles/{profile_name}")
 
-print("[INFO] Cookie を取得中...")
-cookies = driver.get_cookies()
+    options = Options()
+    options.add_argument(f"--user-data-dir={profile_path}")
+    if args.detach:
+        options.add_experimental_option("detach", True)
 
-os.makedirs("output", exist_ok=True)
-with open(cookie_file, "w", encoding="utf-8") as f:
-    json.dump(cookies, f, indent=2, ensure_ascii=False)
+    print("[INFO] Launching Chrome...")
+    driver = webdriver.Chrome(options=options)
+    try:
+        print(f"[INFO] Accessing {url} ...")
+        driver.get(url)
+        time.sleep(args.wait)  # Can be replaced with WebDriverWait if needed
 
-print(f"[✅ 完了] Cookie を保存しました → {cookie_file}")
-driver.quit()
+        # Considering redirects: determine the domain name from the final URL
+        final_url = driver.current_url
+        domain = host_from_url(final_url)
+        os.makedirs("output", exist_ok=True)
+        cookie_file = f"output/cookies_{domain}.json"
+
+        print("[INFO] Retrieving cookies...")
+        cookies = driver.get_cookies()
+
+        with open(cookie_file, "w", encoding="utf-8") as f:
+            json.dump(cookies, f, indent=2, ensure_ascii=False)
+
+        print(f"[ Completed] Cookies saved → {cookie_file}")
+    finally:
+        # Use --detach to keep the browser window open (do not quit when detached)
+        if not args.detach:
+            driver.quit()
+
+if __name__ == "__main__":
+    main()
