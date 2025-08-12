@@ -52,7 +52,18 @@ Identify login state changes or advertisement personalization caused by cookies.
 
 Understand tracking mechanisms in a safe, controlled environment without privacy risks.
 
+Cookie Filtering (Optional)
+importer/cookie_importer.py can block or allow specific cookies (via regular expressions) using filters.json or CLI options.
+
+filters <path>: Load filters.json
+allow: Allowlist (only cookies matching domain/path/name are applied)
+block: Blocklist (cookies matching these patterns are excluded)
+block-domain: Block cookies based on domain
+dry-run: Show filtering results without applying changes
+quiet: Suppress detailed logs
+
 Directory Structure
+
 
 cookie-tool/
 ├── extractor/              # Cookie extraction scripts
