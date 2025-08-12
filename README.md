@@ -40,7 +40,7 @@ Extracted cookies are saved in the format:
 output/cookies_<domain>.json
 ※ All cookies are from test accounts only.
 
-2. Import Cookies
+2. Import Cookies-
 
 python importer/cookie_importer.py
 Reads a saved cookie file and applies it to a test browser profile.
