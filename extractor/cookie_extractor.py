@@ -1,5 +1,6 @@
 # extractor/cookie_extractor.py
 
+
 import json, os, sys, time, argparse
 from urllib.parse import urlsplit
 from selenium import webdriver
