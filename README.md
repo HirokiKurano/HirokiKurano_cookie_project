@@ -27,7 +27,6 @@ Project Schedule (Summer 2025)
 
 Setup
 
-```bash
 git clone https://github.com/HirokiKurano/HirokiKurano_cookie_project.git
 cd HirokiKurano_cookie_project
 pip install -r requirements.txt
@@ -35,18 +34,14 @@ pip install -r requirements.txt
 
 Usage
 1. Extract Cookies
-bash
-Copy
-Edit
+
 python extractor/cookie_extractor.py
 Extracted cookies are saved in the format:
 output/cookies_<domain>.json
 ※ All cookies are from test accounts only.
 
 2. Import Cookies
-bash
-Copy
-Edit
+
 python importer/cookie_importer.py
 Reads a saved cookie file and applies it to a test browser profile.
 
@@ -58,9 +53,7 @@ Identify login state changes or advertisement personalization caused by cookies.
 Understand tracking mechanisms in a safe, controlled environment without privacy risks.
 
 Directory Structure
-bash
-Copy
-Edit
+
 cookie-tool/
 ├── extractor/              # Cookie extraction scripts
 │   └── cookie_extractor.py
