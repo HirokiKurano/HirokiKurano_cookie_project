@@ -1,0 +1,73 @@
+
+Two Windows users on your laptop (or two clean VMs)
+
+Use Chrome (already installed)
+
+Run your prepared extractor/importer code
+
+Test banners, language setting, and login → then transfer cookies → see what happens
+
+Step-by-step plan for today
+🔹 1. Prepare environment variables
+
+Both extractor and importer scripts require this:
+
+set COOKIE_LAB_TESTMODE=1
+
+
+Run it in every Command Prompt session before executing your scripts.
+
+🔹 2. Extraction (UserA / VM-A)
+
+Open Command Prompt, go to your project folder:
+
+cd C:\Users\<UserA>\HirokiKurano_cookie_project
+set COOKIE_LAB_TESTMODE=1
+
+python extractor\cookie_extractor.py https://www.bbc.com ProfileA ^
+  --browser chrome --mode cdp --wait 90 --detach
+
+
+Replace https://www.bbc.com with your test site.
+
+ProfileA is just a name for this Chrome profile (clean if first time).
+
+During the 90 seconds waiting period:
+
+Accept the data protection / cookie banner
+
+Change language if available
+
+Log in to your account (if you want to test session transfer)
+
+Result → file like:
+output\cookies_www.bbc.com.json
+
+🔹 3. Copy cookies to UserB / VM-B
+
+Either via shared folder, USB, or simply commit & pull via Git
+
+Place the file into the same project folder under output\
+
+🔹 4. Import (UserB / VM-B)
+cd C:\Users\<UserB>\HirokiKurano_cookie_project
+set COOKIE_LAB_TESTMODE=1
+
+python importer\cookie_importer.py https://www.bbc.com ProfileB ^
+  --browser chrome --mode cdp --wait 3 --screenshot
+
+
+ProfileB is a new profile for UserB / VM-B
+
+Script will clear cookies/storage, apply extracted cookies, reload the page
+
+A screenshot is saved:
+output\screenshot_after_www.bbc.com.png
+
+🔹 5. Observe results
+
+Banner: Is it already dismissed?
+
+Language: Did the site open in the custom language?
+
+Login: Are you logged in without typing credentials?
