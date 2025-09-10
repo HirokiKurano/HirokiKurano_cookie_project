@@ -74,6 +74,7 @@ Produces verification JSON (cookies_after_<domain>.json) and optional screenshot
 
 ## Directory Structure
 
+```text
 cookie-tool/
 ├── extractor/              # Cookie extraction scripts
 │   └── cookie_extractor.py
