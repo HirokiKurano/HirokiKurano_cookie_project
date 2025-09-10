@@ -1,4 +1,4 @@
-import json, os, sys, time, argparse, shutil
+import json, os, sys, time, argparse
 from urllib.parse import urlsplit
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -26,7 +26,6 @@ def normalize_from_cdp(cookie):
 def compute_profile_dir(profile_name: str, browser: str) -> str:
     legacy = os.path.abspath(f"profiles/{profile_name}")
     scoped = os.path.abspath(f"profiles/{browser}_{profile_name}")
-    # 既存との互換を優先。なければブラウザ別ディレクトリを使う
     return legacy if os.path.exists(legacy) else scoped
 
 def make_driver(browser: str, profile_dir: str, headless: bool, detach: bool):
@@ -38,11 +37,11 @@ def make_driver(browser: str, profile_dir: str, headless: bool, detach: bool):
         opts.add_argument("--log-level=3")
         if headless: opts.add_argument("--headless=new")
         if detach: opts.add_experimental_option("detach", True)
-        # Brave の場合はバイナリ推定（見つからなければそのまま Chrome を利用）
+        # Brave binary hint
         if browser == "brave":
             for p in [
                 r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe",
-                r"C:\Program Files (x86)\BraveSoftware\Brave-Browser\Application\brave.exe"
+                r"C:\Program Files (x86)\BraveSoftware\Brave-Browser\Application\brave.exe",
             ]:
                 if os.path.exists(p):
                     opts.binary_location = p
@@ -54,23 +53,51 @@ def make_driver(browser: str, profile_dir: str, headless: bool, detach: bool):
         opts.add_argument(f"--user-data-dir={profile_dir}")
         opts.add_argument("--log-level=3")
         if headless: opts.add_argument("--headless=new")
-        # Edge は detach 相当のオプションがないので無視
         return webdriver.Edge(options=opts)
 
     if browser == "firefox":
         opts = FirefoxOptions()
         if headless: opts.add_argument("-headless")
-        # プロファイル永続化は必須でないので指定なし（必要なら Gecko 用プロフィール運用に変更可）
         return webdriver.Firefox(options=opts)
 
     raise SystemExit(f"[ABORT] unsupported browser: {browser}")
+
+def get_storage(driver, storage_type: str):
+    """
+    storage_type: 'localStorage' or 'sessionStorage'
+    取得失敗時は {} を返す
+    """
+    try:
+        script = """
+        const type = arguments[0];
+        try {
+          const store = window[type];
+          const out = {};
+          for (let i = 0; i < store.length; i++) {
+            const k = store.key(i);
+            out[k] = store.getItem(k);
+          }
+          return { ok: true, data: out };
+        } catch (e) {
+          return { ok: false, error: String(e) };
+        }
+        """
+        res = driver.execute_script(script, storage_type)
+        if res and res.get("ok"):
+            return res.get("data") or {}
+        else:
+            print(f"[WARN] {storage_type} read failed: {res.get('error') if res else 'unknown'}")
+            return {}
+    except Exception as e:
+        print(f"[WARN] {storage_type} read exception: {e}")
+        return {}
 
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Cookie Extractor (Selenium or CDP, multi-browser)",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
-    parser.add_argument("url", help="Target URL (e.g., https://www.bbc.com/)")
+    parser.add_argument("url", help="Target URL (e.g., https://example.com/)")
     parser.add_argument("profile_name", help="Profile name (stored under profiles/)")
     parser.add_argument("--browser", choices=["chrome","edge","brave","chromium","firefox"], default="chrome")
     parser.add_argument("--wait", type=int, default=5, help="Seconds to wait after page load")
@@ -78,6 +105,8 @@ def parse_args():
     parser.add_argument("--mode", choices=["selenium", "cdp"], default="cdp",
                         help="Selenium API (no HttpOnly) or CDP (HttpOnly supported)")
     parser.add_argument("--run-dir", default=None, help="Directory to save outputs (e.g., runs/...)")
+    parser.add_argument("--with-storage", action="store_true",
+                        help="Also dump localStorage & sessionStorage for the final origin")
     return parser.parse_args()
 
 def main():
@@ -89,7 +118,7 @@ def main():
     url = args.url
     headless = os.getenv("HEADLESS") == "1"
 
-    # Firefox は CDP 非対応なので自動フォールバック
+    # Firefox CDP fallback
     if args.mode == "cdp" and args.browser not in CDP_BROWSERS:
         print("[WARN] CDP is not supported on this browser. Falling back to Selenium mode.")
         args.mode = "selenium"
@@ -113,6 +142,7 @@ def main():
         os.makedirs(out_base, exist_ok=True)
         cookie_file = os.path.join(out_base, f"cookies_{domain}.json")
 
+        # Cookies
         if args.mode == "cdp" and args.browser in CDP_BROWSERS:
             print("[INFO] Retrieving cookies via CDP (includes HttpOnly)...")
             all_cookies = driver.execute_cdp_cmd("Network.getAllCookies", {})["cookies"]
@@ -120,6 +150,14 @@ def main():
         else:
             print("[INFO] Retrieving cookies via Selenium (no HttpOnly)...")
             cookies = driver.get_cookies()
+
+        # Storage (optional)
+        local_storage, session_storage = {}, {}
+        if args.with_storage:
+            print("[INFO] Reading localStorage / sessionStorage for", domain, "...")
+            local_storage = get_storage(driver, "localStorage")
+            session_storage = get_storage(driver, "sessionStorage")
+            print(f"[INFO] Storage now: localStorage={len(local_storage)}, sessionStorage={len(session_storage)}")
 
         payload = {
             "meta": {
@@ -131,12 +169,15 @@ def main():
                 "final_url": final_url,
                 "final_domain": domain
             },
-            "cookies": cookies
+            "cookies": cookies,
+            "localStorage": local_storage,
+            "sessionStorage": session_storage
         }
+
         with open(cookie_file, "w", encoding="utf-8") as f:
             json.dump(payload, f, indent=2, ensure_ascii=False)
 
-        print(f"[COMPLETED] Cookies saved -> {cookie_file}")
+        print(f"[COMPLETED] Saved -> {cookie_file}")
 
     finally:
         if not args.detach:
