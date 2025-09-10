@@ -1,86 +1,136 @@
-HirokiKurano Cookie Privacy Project
+HirokiKurano Cookie Project 
 
-This project develops a **Python-based toolset for extracting, importing, and managing cookies** from web browsers,  
-with the aim of **testing cookie behavior and evaluating its impact on online privacy** in a controlled environment.
+This work designs a toolset in Python, for scraping, importing and storage of cookies and browser storage with the goal of testing of cookie behaviour and evaluation of the resulting user experience for authentication, consent and personalization in the light of GDPR. 
 
-No real personal cookies or private data are used in this project.**  
-All experiments are conducted exclusively on **test accounts and isolated local browser profiles** created by the researcher.
+Note that these experiments occur exclusively in test accounts and local browser profiles. 
 
----
+No cookies are set containing personal and/or third-party data. 
 
-Project Schedule (Summer 2025)
+ 
 
-| Date       | Task |
-|------------|------|
-| 24 Jun     | Topic research & technical background study |
-| 2 Jul      | Develop cookie extraction tool (via Chrome DevTools Protocol) |
-| 11 Jul     | Develop cookie import tool |
-| 18 Jul     | Test extraction & switching between test browser profiles |
-| 25 Jul     | Inspect and block specific cookies (e.g., login-related) |
-| 8 Aug      | Cross-profile cookie mixing experiments |
-| 15 Aug     | Privacy impact analysis & visualization |
-| 5 Sep      | Draft submission of final report |
-| 12 Sep     | Final submission |
+Features 
 
+Extractor 
 
----
+Retrieves cookies from supported browsers (Chrome, Edge, Brave, Chromium, Firefox). 
+ Note: for this part of project only Chrome was utilised. 
 
-Setup
+Chrome DevTools Protocol (CDP) is the way to go for full capture including HttpOnly cookies. 
 
-git clone https://github.com/HirokiKurano/HirokiKurano_cookie_project.git
-cd HirokiKurano_cookie_project
-pip install -r requirements.txt
+Fallback to Selenium when CDP is not available. 
 
+Optional storage of localStorage and sessionStorage (--with-storage). 
 
-Usage
-1. Extract Cookies
+Saves output in organized JSON with metadata. 
 
-python extractor/cookie_extractor.py
-Extracted cookies are saved in the format:
-output/cookies_<domain>.json
-※ All cookies are from test accounts only.
+Importer 
 
-2. Import Cookies-
+Reads out JSON already extracted and applies cookies/storage into a new browsing session. 
 
-python importer/cookie_importer.py
-Reads a saved cookie file and applies it to a test browser profile.
+CDP mode: only apply cookies before navigating and restore after document start. 
 
-Experiment Background & Purpose
-Switch cookies between different test browser profiles to observe behavioral changes.
+Selenium Mode: inject cookies after page first load and then reload. 
 
-Identify login state changes or advertisement personalization caused by cookies.
+And support the pre-clear of cookies and storage to make the state clear. 
 
-Understand tracking mechanisms in a safe, controlled environment without privacy risks.
+Optional screenshot capture for verification. 
 
-Cookie Filtering (Optional)
-importer/cookie_importer.py can block or allow specific cookies (via regular expressions) using filters.json or CLI options.
+Filtering & Variants 
 
-filters <path>: Load filters.json
-allow: Allowlist (only cookies matching domain/path/name are applied)
-block: Blocklist (cookies matching these patterns are excluded)
-block-domain: Block cookies based on domain
-dry-run: Show filtering results without applying changes
-quiet: Suppress detailed logs
+Individual files in the JSON can be modified to run on subsets of data: 
 
-Directory Structure
+Consent-only (e.g., ckns_policy, eu_cookie) 
 
+Login-only (e.g., reddit_session) 
 
-cookie-tool/
-├── extractor/              # Cookie extraction scripts
-│   └── cookie_extractor.py
-├── importer/               # Cookie import scripts
-│   └── cookie_importer.py
-├── output/                 # Extracted cookie files (.gitignored)
-├── requirements.txt        # Dependencies
-├── .gitignore
-└── README.md
+All-except-auth (retains ads/personalization cookies, clear authentication) 
 
-Notes
-Requires Google Chrome installed locally.
+Reproducibility & Safety 
 
-All tests are performed on local test accounts and browser profiles.
+Cross-runas shell execution on Windows for profile isolation. 
 
-No personal or third-party cookies are handled.
+Needs COOKIE_LAB_TESTMODE=1 to not use blindly on real accounts. 
 
-License
-MIT License © Hiroki Kurano
+Outputs are versioned JSON artifacts: 
+
+cookies_<domain>.json 
+
+cookies_after_<domain>.json 
+
+ 
+
+Installation 
+
+git clone https://github.com/HirokiKurano/HirokiKurano_cookie_project.git 
+cd HirokiKurano_cookie_project 
+pip install -r requirements.txt 
+ 
+
+ 
+
+Usage 
+
+Extract Cookies 
+
+python extractor/cookie_extractor.py \ 
+  --url https://www.bbc.co.uk/ \ 
+  --profile user1 \ 
+  --browser chrome \ 
+  --mode cdp \ 
+  --with-storage \ 
+  --run-dir outputUser1 
+ 
+
+Saves results to outputUser1/cookies_<domain>.json. 
+
+Includes cookies and optional storage with metadata (browser, profile, timestamp, final domain). 
+
+Import Cookies 
+
+python importer/cookie_importer.py \ 
+  --url https://www.bbc.co.uk/ \ 
+  --profile user2 \ 
+  --browser chrome \ 
+  --mode cdp \ 
+  --run-dir outputUser1 \ 
+  --screenshot 
+ 
+
+Reads cookies from cookies_<domain>.json and applies them into User2’s session. 
+
+Produces verification JSON (cookies_after_<domain>.json) and optional screenshot. 
+
+ 
+
+Directory Structure 
+
+cookie-tool/ 
+├── extractor/              # Cookie extraction scripts 
+│   └── cookie_extractor.py 
+├── importer/               # Cookie import scripts 
+│   └── cookie_importer.py 
+├── output*/                # Run-specific output (JSON, screenshots) [gitignored] 
+├── requirements.txt        # Python dependencies 
+├── .gitignore 
+└── README.md 
+ 
+
+ 
+
+Ethical Considerations 
+
+No actual users constitute the data: all the users were test accounts set up by the researcher. 
+
+No password storage: authentication is replicated using only distributing cookies, never through stored password. 
+
+Transparancy: all JSON outputs are exlicit and repproductible, and are local results only. 
+
+Safety flag: requires COOKIE_LAB_TESTMODE=1 to execution. 
+
+ 
+
+License 
+
+MIT License © Hiroki Kurano, 2025 
+
+ 
