@@ -39,7 +39,7 @@ Individual JSON files can be modified to run on subsets of data:
 
 ---
 
-## Directory Structure
+### Directory Structure
 
 ```text
 cookie-tool/
@@ -54,6 +54,7 @@ cookie-tool/
 ├── .gitignore
 └── README.md
 
+
 ### Ethical Considerations
 
 - No real users: all accounts are test accounts created by the researcher.
@@ -62,4 +63,5 @@ cookie-tool/
 - Safety flag: requires COOKIE_LAB_TESTMODE=1 for execution.
 
 ### License
+
 MIT License © Hiroki Kurano, 2025
