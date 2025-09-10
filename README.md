@@ -1,8 +1,8 @@
 # HirokiKurano Cookie Project
 
-This work designs a toolset in Python, for scraping, importing and storage of cookies and browser storage with the goal of testing of cookie behaviour and evaluation of the resulting user experience for authentication, consent and personalization in the light of GDPR.
+This work designs a toolset in Python, for scraping, importing and storage of cookies and browser storage with the goal of testing of cookie behaviour and evaluation of the resulting user experience for **authentication**, **consent**, and **personalization** in the light of GDPR.
 
-> **Note:** These experiments occur exclusively in test accounts and local browser profiles.  
+> **Note:** These experiments occur exclusively in **test accounts** and **local** browser profiles.  
 > No cookies are set containing personal and/or third-party data.
 
 ---
@@ -19,8 +19,8 @@ This work designs a toolset in Python, for scraping, importing and storage of co
 
 ### Importer
 - Reads JSON already extracted and applies cookies/storage into a new browsing session.
-- **CDP mode:** apply cookies before navigating and restore storage at document start.
-- **Selenium mode:** inject cookies after page first load, then reload.
+- **CDP mode:** apply cookies **before navigation** and restore storage at **document start**.
+- **Selenium mode:** inject cookies **after first load**, then reload.
 - Supports **pre-clear** of cookies and storage to start from a clean state.
 - Optional **screenshot** capture for verification.
 
@@ -41,13 +41,12 @@ Individual JSON files can be modified to run on subsets of data:
 
 ## Installation
 
-```bash
 git clone https://github.com/HirokiKurano/HirokiKurano_cookie_project.git
 cd HirokiKurano_cookie_project
 pip install -r requirements.txt
 Usage
 Extract Cookies
-bash
+bat
 Copy code
 python extractor/cookie_extractor.py ^
   --url https://www.bbc.co.uk/ ^
@@ -60,9 +59,8 @@ Saves results to outputUser1/cookies_<domain>.json.
 
 Includes cookies and optional storage with metadata (browser, profile, timestamp, final domain).
 
-Import Cookies
-bash
-Copy code
+## Import Cookies
+
 python importer/cookie_importer.py ^
   --url https://www.bbc.co.uk/ ^
   --profile user2 ^
@@ -74,9 +72,8 @@ Reads cookies from cookies_<domain>.json and applies them into User2’s session
 
 Produces verification JSON (cookies_after_<domain>.json) and optional screenshot.
 
-Directory Structure
-text
-Copy code
+## Directory Structure
+
 cookie-tool/
 ├── extractor/              # Cookie extraction scripts
 │   └── cookie_extractor.py
@@ -88,7 +85,8 @@ cookie-tool/
 ├── requirements.txt        # Python dependencies
 ├── .gitignore
 └── README.md
-Ethical Considerations
+
+## Ethical Considerations
 No real users: all accounts are test accounts created by the researcher.
 
 No password storage: authentication is replicated using cookies only, never stored passwords.
@@ -97,8 +95,5 @@ Transparency: all JSON outputs are explicit, reproducible, and local-only.
 
 Safety flag: requires COOKIE_LAB_TESTMODE=1 for execution.
 
-License
+## License
 MIT License © Hiroki Kurano, 2025
-
-yaml
-Copy code
