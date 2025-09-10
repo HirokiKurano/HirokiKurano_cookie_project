@@ -37,6 +37,9 @@ Individual JSON files can be modified to run on subsets of data:
   - `cookies_<domain>.json`
   - `cookies_after_<domain>.json`
 
+
+
+
 ---
 
 ### Directory Structure
@@ -54,6 +57,7 @@ cookie-tool/
 ├── .gitignore
 └── README.md
 
+ ```
 
 ### Ethical Considerations
 
@@ -65,3 +69,4 @@ cookie-tool/
 ### License
 
 MIT License © Hiroki Kurano, 2025
+
