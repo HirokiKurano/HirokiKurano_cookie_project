@@ -39,39 +39,6 @@ Individual JSON files can be modified to run on subsets of data:
 
 ---
 
-## Installation
-
-git clone https://github.com/HirokiKurano/HirokiKurano_cookie_project.git
-cd HirokiKurano_cookie_project
-pip install -r requirements.txt
-Usage
-Extract Cookies
-bat
-Copy code
-python extractor/cookie_extractor.py ^
-  --url https://www.bbc.co.uk/ ^
-  --profile user1 ^
-  --browser chrome ^
-  --mode cdp ^
-  --with-storage ^
-  --run-dir outputUser1
-Saves results to outputUser1/cookies_<domain>.json.
-
-Includes cookies and optional storage with metadata (browser, profile, timestamp, final domain).
-
-## Import Cookies
-
-python importer/cookie_importer.py ^
-  --url https://www.bbc.co.uk/ ^
-  --profile user2 ^
-  --browser chrome ^
-  --mode cdp ^
-  --run-dir outputUser1 ^
-  --screenshot
-Reads cookies from cookies_<domain>.json and applies them into User2’s session.
-
-Produces verification JSON (cookies_after_<domain>.json) and optional screenshot.
-
 ## Directory Structure
 
 ```text
@@ -87,6 +54,8 @@ cookie-tool/
 ├── .gitignore
 └── README.md
 
+---
+
 ## Ethical Considerations
 No real users: all accounts are test accounts created by the researcher.
 
@@ -95,6 +64,8 @@ No password storage: authentication is replicated using cookies only, never stor
 Transparency: all JSON outputs are explicit, reproducible, and local-only.
 
 Safety flag: requires COOKIE_LAB_TESTMODE=1 for execution.
+
+---
 
 ## License
 MIT License © Hiroki Kurano, 2025
